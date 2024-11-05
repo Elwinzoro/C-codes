@@ -1,0 +1,99 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class MovieTicket {
+private:
+    static int SeatNumber;
+    static int AvailableTickets;
+    static const int PriceOptions[2]; 
+public:
+    string MovieName;
+    int TicketPrice;
+    string Customer;
+    MovieTicket(string mn = "", int tp = 0, string c = "") : MovieName(mn), TicketPrice(tp), Customer(c) {
+        if (AvailableTickets > 0) {
+            AvailableTickets--;
+            SeatNumber++;
+        } else {
+            cout << "No available seats!" << endl;
+        }
+    }
+    void selectMovie() {
+        int choice;
+        cout << "\n--- Movie Selection ---" << endl;
+        cout << "1. Bougainvilla" << endl;
+        cout << "2. Venom" << endl;
+        cout << "3. Truth" << endl;  
+        cout << "Enter the number of the movie you want to book: ";
+        cin >> choice;
+        while (true) {
+            if (choice == 1) {
+                MovieName = "Bougainvilla";
+                cout << "You selected 'Bougainvilla'." << endl;
+                break;
+            } else if (choice == 2) {
+                MovieName = "Venom";
+                cout << "You selected 'Venom'." << endl;
+                break;
+            } else if (choice == 3) {
+                MovieName = "Truth";
+                cout << "You selected 'Truth'." << endl;
+                break;
+            } else {
+                cout << "Invalid choice! Enter a valid number (1-3): ";
+                cin >> choice;
+            }
+        }
+    }
+    void inputDetails() {
+        cout << "\n--- Enter Ticket Details ---" << endl;
+        cout << "Available Ticket Prices: 150 or 200" << endl;
+        cout << "Enter your choice: ";
+        cin >> TicketPrice;
+        while (TicketPrice != 150 && TicketPrice != 200) {
+            cout << "Invalid price! Please enter either 150 or 200: ";
+            cin >> TicketPrice;
+        }
+        cout << "Enter customer name: ";
+        cin.ignore();
+        getline(cin, Customer);
+    }
+    void displayTicket() const {
+        cout << "\n--- Ticket Details ---" << endl;
+        cout << "Movie Name: " << MovieName << endl;
+        cout << "Ticket Price: " << TicketPrice << endl;
+        cout << "Customer Name: " << Customer << endl;
+    }
+    friend void displayAvailableTickets(MovieTicket &mt);
+    friend void displaySeatNumber(MovieTicket &mt);
+    static void showBookingSummary() {
+        cout << "\n--- Booking Summary ---" << endl;
+        cout << "Total Seats Booked: " << SeatNumber << endl;
+        cout << "Tickets Still Available: " << AvailableTickets << endl;
+    }
+};
+int MovieTicket::SeatNumber = 0;
+int MovieTicket::AvailableTickets = 100;
+const int MovieTicket::PriceOptions[2] = {150, 200};
+void displayAvailableTickets(MovieTicket &mt) {
+    cout << "Tickets Available: " << MovieTicket::AvailableTickets << endl;
+}
+void displaySeatNumber(MovieTicket &mt) {
+    cout << "Seat Number Assigned: " << MovieTicket::SeatNumber << endl;
+}
+int main() {
+    int n;
+    cout << "Enter the number of tickets you want to book: ";
+    cin >> n;
+    MovieTicket tickets[n];
+    for (int i = 0; i < n; ++i) {
+        cout << "\n--- Booking Ticket " << i + 1 << " ---" << endl;
+        tickets[i].selectMovie();
+        tickets[i].inputDetails();
+        tickets[i].displayTicket();
+        displayAvailableTickets(tickets[i]);
+        displaySeatNumber(tickets[i]);
+    }
+    MovieTicket::showBookingSummary();
+    return 0;
+}
